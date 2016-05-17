@@ -1,0 +1,31 @@
+#!/usr/bin/python3
+
+import configparser
+import requests
+import json
+import sys
+
+if len(sys.argv) < 2:
+    print('No registration_id supplied')
+    sys.exit(1)
+
+
+config = configparser.ConfigParser()
+config.read('./credentials.conf')
+
+api_key = config.get('credentials', 'api_key')
+
+
+headers = {
+    'Authorization': 'key=' + api_key,
+    'Content-Type': 'application/json'
+}
+
+payload = {
+    'registration_ids': [sys.argv[1]]
+}
+
+r = requests.post('https://android.googleapis.com/gcm/send', data=json.dumps(payload), headers=headers)
+
+print(r.json())
+
